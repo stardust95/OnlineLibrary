@@ -1,0 +1,174 @@
+﻿@{
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+
+@model OnlineLibrary.Models.Book
+
+@{
+	ViewBag.Title = Model.Title;
+	var result = "";
+	var UserName = System.Web.HttpContext.Current.User.Identity.Name.ToString( );
+
+}
+
+<div class="container">
+	<div class="row clearfix">
+		<div class="col-md-1 column">
+		</div>
+		<div class="col-md-6 column">
+			<div class="row clearfix">
+				<div class="col-md-4 column" >
+					<img src=@Model.Image class="img-responsive img-rounded col-center-block center-block " style="margin-top:20px"  />
+				</div>
+				<div class="col-md-8 column">
+					<h3>@Model.Title</h3>
+
+					@if ( !string.IsNullOrEmpty(Model.OriginTitle) ) {<p>原标题 : @Model.OriginTitle</p>}
+
+					@if ( !string.IsNullOrEmpty(Model.SubTitle) ) {<p>副标题 : @Model.SubTitle</p>}
+
+					@if ( !string.IsNullOrEmpty(Model.AltTitle) ) {<p>别名 : @Model.AltTitle</p>}
+
+					<p>作者 : @Model.Author</p>
+
+					@if ( !string.IsNullOrEmpty(Model.Translator) ) {<p>译者 : @Model.Translator</p>}
+
+					<p>出版信息 : @Model.Publisher / @Model.PubDate </p>
+
+					@if ( Model.Price > 0 ) {<p>价格 : @Model.Price .00 元 </p>}
+
+					<p>
+						<div class="row clearfix">
+							<div class="col-md-4">
+								<div class="progress " style="width:100px">
+									@{ var percent = Model.Rating.Average * 10; }
+									<div class="progress-bar progress-success" aria-valuenow=@Model.Rating.Average
+										 style=@string.Format("width:{0}%", percent)>
+									</div>
+								</div>
+								
+							</div>
+							<div class="col-md-6">
+								<span style="color:cornflowerblue"> @Model.Rating.Average </span>  |  @Model.Rating.NumRaters 人评价
+							</div>
+						</div>
+					</p>
+
+					
+
+					<button type="button" class="btn btn-info" href="#modal-container-result" role="button"data-toggle="modal"
+					onclick=@{ result = OnlineLibrary.Models.QueryHandler.BorrowBooks(username:UserName, 
+										  bookid: Model.ID.ToString( ), date: System.DateTime.Now.ToString( )); } >
+					 Borrow
+					</button>
+
+					<div class="modal fade" id="modal-container-result" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									@*<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>*@
+								</div>
+								<div class="modal-body">
+									@result
+								</div>
+								<div class="modal-footer">
+										<a href=@Url.Action("Details", "Book", new { id=Model.ID}) type="button" class="btn btn-default" >
+											Close
+										</a>
+								</div>
+							</div>
+
+						</div>
+
+					</div>
+
+
+				</div>
+			</div>
+			<div class="row clearfix">
+				<div class="col-md-12 column blank-row">
+				</div>
+			</div>
+			<div class="row clearfix">
+				<div class="col-md-12 column">
+					@foreach ( var item in Model.Tags ) {
+						<a href=@Url.Action("Search", "Book", new { BookGenre = "Tag", SearchString = item}) >
+							<span class="label label-default" style="margin-left:5px">
+
+								@item
+							</span>
+						</a>
+					}
+					
+				</div>
+			</div>
+			<div class="row clearfix">
+				<div class="col-md-12 column blank-row">
+				</div>
+			</div>
+			<div class="tabbable" id="tabs-986938">
+				<ul class="nav nav-tabs">
+					<li class="active">
+						<a href="#panel-summary" data-toggle="tab">Summary</a>
+					</li>
+					<li>
+						<a href="#panel-catalog" data-toggle="tab">Catalog</a>
+					</li>
+					<li>
+						<a href="#panel-info" data-toggle="tab">Author Info</a>
+					</li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane active" id="panel-summary">
+						<p class="multiline">
+							@Html.DisplayFor(m => m.Summary)
+						</p>
+					</div>
+					<div class="tab-pane" id="panel-catalog">
+						<p class="multiline">
+							@Html.DisplayFor(m => m.Catalog)
+						</p>
+					</div>
+					<div class="tab-pane" id="panel-info">
+						<p class="multiline">
+							@Html.DisplayFor(m => m.AuthorInfo)
+						</p>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+		<div class="col-md-1 column">
+		</div>
+		<div class="col-md-2 column">
+			@* Appendix *@
+			<div class="list-group">
+				@foreach ( var item in ViewBag.Recommendation ) {
+					<a href=@Url.Action("Details", "Book", new { ID=item.ID })>
+					<div class="list-group-item">
+						<img src=@item.Image class="img-responsive img-rounded col-center-block center-block" />
+						<div class="text-center">@item.Title</div>
+					</div>
+					</a>
+			}
+			</div>
+		</div>
+		<div class="col-md-2 column">
+		</div>
+	</div>
+	
+</div>
+
+@*<div class="container">
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<a id="modal-621771" href="#modal-container-621771" role="button" class="btn" data-toggle="modal">触发遮罩窗体</a>
+
+			
+
+		</div>
+	</div>
+</div>*@

@@ -1,0 +1,101 @@
+﻿@model OnlineLibrary.Models.IndexViewModel
+@{
+	ViewBag.Title = "Manage";
+	var result = "";
+	var UserName = System.Web.HttpContext.Current.User.Identity.Name.ToString( );
+}
+
+<h2>@ViewBag.Title.</h2>
+
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+<div>
+    <h4>Manage your books</h4>
+    <hr />
+	<ul class="list-group col-md-12">
+		@foreach ( var item in ViewBag.BooksInBorrow ) {
+			<li class="list-group-item col-md-12">
+				<div class="row clearfix">
+					<div class="col-md-2" style="vertical-align:central">
+						<a href=@Url.Action("Details", "Book", new { id = item.ID })>
+							<img src=@item.Image class="img-responsive">
+						</a>
+					</div>
+					<div class="col-md-8 text-info ">
+						<h3><strong><a href=@Url.Action("Details", "Book", new { id = item.ID })> @item.Title </a></strong></h3>
+						<p>
+							作者  @item.Author @if ( !string.IsNullOrEmpty(item.Translator) ) { <span>  译者 @item.Translator</span>}
+						</p>
+						<p>
+							出版信息  @item.Publisher / @item.PubDate
+						</p>
+						<p>
+							<div>
+								<span style="color:orangered"> @item.Rating.Average </span>  |  @item.Rating.NumRaters 人评价
+							</div>
+						</p>
+						<p>
+							借阅时间  @ViewBag.BorrowDate[item.ID.ToString( )]
+						</p>
+
+					</div>
+					<div class="col-md-2" >
+						<button type="button" class="btn btn-info" href="#modal-container-result" role="button" data-toggle="modal" style="margin-top:50%"
+								onclick=@{ result = OnlineLibrary.Models.QueryHandler.ReturnBooks(username:UserName, bookid: item.ID.ToString( )); }>
+							Return
+						</button>
+
+						<div class="modal fade" id="modal-container-result" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										@*<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>*@
+									</div>
+									<div class="modal-body">
+										@result
+									</div>
+									<div class="modal-footer">
+										<a href=@Url.Action("Index", "Manage") type="button" class="btn btn-default">
+											Close
+										</a>
+									</div>
+								</div>
+
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</li>
+		}
+	</ul>
+    @*<dl class="dl-horizontal">
+        <dt>Password:</dt>
+        <dd>
+            [
+            @if (Model.HasPassword)
+            {
+                @Html.ActionLink("Change your password", "ChangePassword")
+            }                 
+            else
+            {
+                @Html.ActionLink("Create", "SetPassword")
+            }
+            ]
+        </dd>
+        <dt>External Logins:</dt>
+        <dd>
+            @Model.Logins.Count [
+            @Html.ActionLink("Manage", "ManageLogins") ]
+        </dd>
+      
+        <dt>Two-Factor Authentication:</dt>
+        <dd>
+            <p>
+                There are no two-factor authentication providers configured. See <a href="http://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
+                for details on setting up this ASP.NET application to support two-factor authentication.
+            </p>
+            
+        </dd>
+    </dl>*@
+</div>

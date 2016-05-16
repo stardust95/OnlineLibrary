@@ -1,0 +1,85 @@
+﻿@using PagedList; 
+@using PagedList.Mvc;
+@model PagedList.PagedList<OnlineLibrary.Models.Book>
+@{
+	ViewBag.Title = "Search";
+}
+
+<p>
+	<div class="row col-center-block">
+		<div class="btn-group ">
+			<div class="col-md-3"></div>
+			@using ( Html.BeginForm("Search", "Book", FormMethod.Get) ) {
+				@Html.DropDownList("BookGenre", (SelectList)ViewBag.BookGenreList,
+									new { onchange = "setLocation(this.value);", @class = "form-control col-md-1", @style = "width:150px" })
+
+				@Html.TextBox("SearchString", "Filter", new { @class = "form-control col-md-8" })
+			}
+			<span class="input-group-btn">
+				<button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+			</span>
+		</div>
+	</div>
+
+	<div class="row clearfix" style="min-height:50px">
+		<div class="col-md-12 column">
+		</div>
+	</div>
+	<div class="col-md-12">
+		<ul class="list-group">
+			<div class="row clearfix">
+				<div class="list-group-item-heading col-md-3">搜索结果 @Model.FirstItemOnPage - @Model.LastItemOnPage  共 @Model.TotalItemCount</div>
+				
+				<div class="list-group-item-heading pull-right " >
+				@using ( Html.BeginForm("Search", "Book", FormMethod.Get, new { BookGenre = ViewBag.BookGenre, SearchString = ViewBag.SearchString}) ) {
+					@Html.Hidden("SearchString", "SearchString")
+					@Html.Hidden("BookGenre", "BookGenre") 
+					@Html.DropDownList("OrderBy", (SelectList)ViewBag.OrderByList,
+							 new { onchange = "this.form.submit()", @class = "form-control col-md-1", @style = "width:150px" })
+				}
+				</div>
+			</div>
+			@foreach(var item in Model ) {
+				<li class="list-group-item" >
+					<div class="col-md-2"  style=" vertical-align:central">
+						<a href=@Url.Action("Details", "Book", new { id = item.ID })>
+							<img src=@item.Image class="img-responsive">
+						</a>
+					</div>
+					<div class="text-info">
+						<h3><strong><a href=@Url.Action("Details", "Book", new { id = item.ID })> @item.Title </a></strong></h3>
+						<p>
+							作者  @item.Author @if ( !string.IsNullOrEmpty(item.Translator) ) { <span>  译者 @item.Translator</span>}
+						</p>
+						<p>
+							出版信息  @item.Publisher / @item.PubDate
+						</p>
+						<p>
+							<div class="row clearfix">
+								<div >
+									<span style="color:orangered"> @item.Rating.Average </span>  |  @item.Rating.NumRaters 人评价
+								</div>
+							</div>
+						</p>
+						<p class="summary" style="font-size:smaller">
+							@if(item.Summary.Length > 280 ) {
+								<span>@item.Summary.Substring(0, 280)</span>
+							<span>...<a href="@Url.Action("Details", "Book", new { id = item.ID })">(更多)</a></span>
+							} else {
+								<span>@item.Summary</span>
+							}
+						</p>
+					</div>
+				</li>
+
+			}
+		</ul>
+	</div>
+</p>
+<div class="col-md-10">
+	<div class="col-center-block">
+		@Html.PagedListPager(Model, page=>Url.Action("Search", "Book", 
+	   new { BookGenre = ViewBag.BookGenre, SearchString = ViewBag.SearchString, page, pageSize=Model.PageSize}))
+		
+	</div>
+</div>

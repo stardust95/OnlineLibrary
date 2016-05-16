@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="DefaultConnection-Web.config Connection String" description="DefaultConnection Connection String used in web.config by the application to access the database." defaultValue="Data Source=rds63dvzg67f17fu503z.mysql.rds.aliyuncs.com; User Id=r4cv1pa41f4nqv52; Password=pb123456; Database=r4cv1pa41f4nqv52 " tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\37567\\Documents\\Visual\ Studio\ 2015\\Projects\\OnlineLibraryApp\\OnlineLibrary\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='DefaultConnection']/@connectionString" />
+  </parameter>
+  <parameter name="OnlineLibrary.Models.ApplicationDbContext-Web.config Connection String" description="OnlineLibrary.Models.ApplicationDbContext Connection String used in web.config by the application to access the database." defaultValue="OnlineLibrary.Models.ApplicationDbContext_ConnectionString" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\37567\\Documents\\Visual\ Studio\ 2015\\Projects\\OnlineLibraryApp\\OnlineLibrary\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='OnlineLibrary.Models.ApplicationDbContext']/@connectionString" />
+  </parameter>
+</parameters>
