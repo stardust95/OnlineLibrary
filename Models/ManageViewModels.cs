@@ -58,15 +58,14 @@ namespace OnlineLibrary.Models
         public string ConfirmPassword { get; set; }
     }
 
-    public class AddPhoneNumberViewModel
-    {
-        [Required]
-        [Phone]
-        [Display(Name = "Phone Number")]
-        public string Number { get; set; }
-    }
+	public class AddPhoneNumberViewModel {
+		[Required]
+		[Phone]
+		[Display(Name = "Phone Number")]
+		public string Number { get; set; }
+	}
 
-    public class VerifyPhoneNumberViewModel
+	public class VerifyPhoneNumberViewModel
     {
         [Required]
         [Display(Name = "Code")]

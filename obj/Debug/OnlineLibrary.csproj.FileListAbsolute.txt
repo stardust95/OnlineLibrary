@@ -30,8 +30,6 @@ C:\Users\37567\Documents\Visual Studio 2015\Projects\OnlineLibraryApp\OnlineLibr
 C:\Users\37567\Documents\Visual Studio 2015\Projects\OnlineLibraryApp\OnlineLibrary\bin\Microsoft.Owin.Security.OAuth.dll
 C:\Users\37567\Documents\Visual Studio 2015\Projects\OnlineLibraryApp\OnlineLibrary\bin\Microsoft.Owin.Security.Twitter.dll
 C:\Users\37567\Documents\Visual Studio 2015\Projects\OnlineLibraryApp\OnlineLibrary\bin\Microsoft.Web.Infrastructure.dll
-C:\Users\37567\Documents\Visual Studio 2015\Projects\OnlineLibraryApp\OnlineLibrary\bin\MySql.Data.dll
-C:\Users\37567\Documents\Visual Studio 2015\Projects\OnlineLibraryApp\OnlineLibrary\bin\mysql.data.entity.EF6.dll
 C:\Users\37567\Documents\Visual Studio 2015\Projects\OnlineLibraryApp\OnlineLibrary\bin\MySql.Web.dll
 C:\Users\37567\Documents\Visual Studio 2015\Projects\OnlineLibraryApp\OnlineLibrary\bin\Newtonsoft.Json.dll
 C:\Users\37567\Documents\Visual Studio 2015\Projects\OnlineLibraryApp\OnlineLibrary\bin\Owin.dll

@@ -18,9 +18,9 @@ namespace OnlineLibrary.Models {
 	public class Book {
 
 		public static readonly string ConnectionString =
-			@"Data Source=rds63dvzg67f17fu503z.mysql.rds.aliyuncs.com; User Id=r4cv1pa41f4nqv52; Password=pb123456; Database=r4cv1pa41f4nqv52";
-			//@"Data Source=115.159.110.103; User Id=root; Password=root; Database=douban";
-
+			@"User Id=cdb_outerroot;Host=5758ead546603.sh.cdb.myqcloud.com;Port=3603;Database=douban;Persist Security Info=True;password=ab123456";
+			//@"Data Source=localhost; User Id=root; Database=douban";
+			
 		public static readonly List<string> BookAttributes = new List<string> {
 			"ID", "Title", "SubTitile", "OriginTitle", "Alt_Title",
 			"isbn10", "isbn13", "pub_date", "summary", "catalog", "price", "pages",
@@ -134,6 +134,23 @@ namespace OnlineLibrary.Models {
 
 		public static readonly int QueryLimit = 10000;
 
+		private static void _sqlInjectionFilter(ref string s ) {
+			s = s.Replace("=", "");
+			s = s.Replace("'", "");
+			s = s.Replace(";", "");
+			s = s.Replace(" or ", " ");
+			//s = s.Replace("select", "");
+			//s = s.Replace("update", "");
+			//s = s.Replace("insert", "");
+			//s = s.Replace("delete", "");
+			//s = s.Replace("declare", "");
+			//s = s.Replace("exec", "");
+			//s = s.Replace("drop", "");
+			//s = s.Replace("create", "");
+			s = s.Replace("%", "");
+			s = s.Replace("--", "");
+		}
+
 		private static string _getMediumImage(int ID ) {
 			using (var cn = new MySqlConnection(connectionString: Book.ConnectionString) ) {
 				var cmd = cn.CreateCommand( );
@@ -153,6 +170,8 @@ namespace OnlineLibrary.Models {
 
 		public static List<Book> GetBooksByAuthor(List<string> Authors, string orderby ) {
 			List<Book> result = new List<Book>( );
+
+			_sqlInjectionFilter(ref orderby);
 
 			using ( var cn = new MySqlConnection(connectionString: Book.ConnectionString) ) {
 
@@ -176,7 +195,7 @@ namespace OnlineLibrary.Models {
 
                 cmd.CommandText += " limit " + QueryHandler.QueryLimit;
 
-				using ( var b = cmd.ExecuteReader( ) ) {
+				using ( var b = cmd.ExecuteReader( ) ) { 
 					while ( b.Read( ) ) {
 						result.Add(ReadBrief(b));
 					}
@@ -189,7 +208,9 @@ namespace OnlineLibrary.Models {
 
 		public static List<Book> GetBooksByTag(List<string> Tags, string orderby ) {
 			List<Book> result = new List<Book>();
-			
+
+			_sqlInjectionFilter(ref orderby);
+
 			using(var cn = new MySqlConnection(connectionString: Book.ConnectionString) ) {
 				var cmd = cn.CreateCommand( );
 
@@ -324,6 +345,10 @@ namespace OnlineLibrary.Models {
 
 			char[ ] delims = { ' ', ',', '"', '\'', '\\', '/','.' };
 
+			_sqlInjectionFilter(ref genre);
+			_sqlInjectionFilter(ref query);
+			_sqlInjectionFilter(ref orderby);
+
 			List<Book> result = new List<Book>();
 
 			List<string> Keywords = query.Split(delims, StringSplitOptions.RemoveEmptyEntries).ToList();
@@ -377,6 +402,9 @@ namespace OnlineLibrary.Models {
 			if ( string.IsNullOrEmpty(username) )
 				return "You must Log in to borrow the book";
 
+			_sqlInjectionFilter(ref username);
+			_sqlInjectionFilter(ref bookid);
+
 			using ( var cn = new MySqlConnection(connectionString: Book.ConnectionString) ) {
 
 				var cmd = cn.CreateCommand( );
@@ -402,7 +430,10 @@ namespace OnlineLibrary.Models {
 		}
 
 		public static string BorrowBooks(string username, string bookid, string date ) {
-	
+
+			_sqlInjectionFilter(ref username);
+			_sqlInjectionFilter(ref bookid);
+			_sqlInjectionFilter(ref date);
 
 			if ( string.IsNullOrEmpty(username) )
 				return "You must Log in to borrow the book";
@@ -420,25 +451,30 @@ namespace OnlineLibrary.Models {
 						return "This book has been borrowed";
 				}
 
-				cmd.CommandText = string.Format(@"INSERT INTO user_borrow values('{0}', '{1}', '{2}')", username, bookid, date.Split().ElementAt(0));
+				cmd.CommandText = string.Format(@"INSERT INTO user_borrow values('{0}', '{1}', '{2}')", username, bookid, date);
 
 				try {
 
 					cmd.ExecuteNonQuery();
-
+					
 				}
 
 				catch(MySqlException e ) {
-
-					return e.Message;
+					
+					Console.WriteLine( e.Message ) ;
 
 				}
+
+				cmd.Connection.Close( );
+
 			}
 
 			return "Borrow Success";
 		}
 		
 		public static List<Book> GetBooksInBorrow(string username , out Dictionary<string,string> BorrowDate) {
+
+			_sqlInjectionFilter(ref username);
 
 			List<Book> result = new List<Book>();
 
@@ -456,10 +492,12 @@ namespace OnlineLibrary.Models {
 				using(var r = cmd.ExecuteReader( )){
 					while ( r.Read( ) ) {
 						result.Add(ReadBrief(r));
-						BorrowDate.Add(r["id"].ToString(), r["borrow_date"].ToString( ));
+						BorrowDate.Add(r["id"].ToString(), r["borrow_date"].ToString( ).Split().ElementAt(0));
 					}
 				}
 
+				cmd.Connection.Close( );
+				
 			}
 
 			return result;

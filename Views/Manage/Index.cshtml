@@ -1,6 +1,6 @@
 ﻿@model OnlineLibrary.Models.IndexViewModel
 @{
-	ViewBag.Title = "Manage";
+	ViewBag.Title = "Manage Books";
 	var result = "";
 	var UserName = System.Web.HttpContext.Current.User.Identity.Name.ToString( );
 }
@@ -10,8 +10,11 @@
 
 <p class="text-success">@ViewBag.StatusMessage</p>
 <div>
-    <h4>Manage your books</h4>
-    <hr />
+	<h4 >Borrow List</h4>
+	@*<div class="col-md-2 pull-right" >
+		<button type="button" class="btn col-center-block">Import Books</button> 
+	</div>*@
+
 	<ul class="list-group col-md-12">
 		@foreach ( var item in ViewBag.BooksInBorrow ) {
 			<li class="list-group-item col-md-12">

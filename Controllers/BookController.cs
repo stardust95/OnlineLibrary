@@ -42,6 +42,7 @@ namespace OnlineLibrary.Controllers
         {
 			if ( id == 0 )
 				return View( );
+
 			Book model = QueryHandler.GetDetail((int)id);
 
 			ViewBag.Recommendation = new List<Book>( );
@@ -50,9 +51,6 @@ namespace OnlineLibrary.Controllers
 				ViewBag.Recommendation = QueryHandler.GetBooksByTag(model.Tags.GetRange(0, 1), "Popular").GetRange(0, 5);
 
 			return View(model);
-
-
-
         }
 
 		public ActionResult Borrow(string userName, int? bookId ) {
