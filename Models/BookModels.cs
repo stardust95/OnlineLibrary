@@ -18,7 +18,7 @@ namespace OnlineLibrary.Models {
 	public class Book {
 
 		public static readonly string ConnectionString =
-			@"User Id=cdb_outerroot;Host=5758ead546603.sh.cdb.myqcloud.com;Port=3603;Database=douban;Persist Security Info=True;password=ab123456";
+			@"User Id=cdb_outerroot;Host=5758ead546603.sh.cdb.myqcloud.com;Port=3603;Database=douban;Persist Security Info=True;password=******";
 			//@"Data Source=localhost; User Id=root; Database=douban";
 			
 		public static readonly List<string> BookAttributes = new List<string> {
